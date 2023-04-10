@@ -2,6 +2,7 @@ package com.example.cchat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +24,7 @@ import android.widget.ProgressBar;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -73,7 +76,11 @@ public class CChatActivity extends AppCompatActivity {
             recipientUserName=intent.getStringExtra("recipientUserName");
         }
 
-        setTitle("Chat with "+recipientUserName);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        setTitle(recipientUserName);
         auth=FirebaseAuth.getInstance();
         database=FirebaseDatabase.getInstance();
         storage=FirebaseStorage.getInstance();
@@ -82,10 +89,6 @@ public class CChatActivity extends AppCompatActivity {
         usersDatabaseReference = database.getReference().child("users");
         chatImageStorageReference=storage.getReference().child("chat_images");
 
-
-
-
-        userName="Default name";
         messageListView=findViewById(R.id.messageListView);
         progressBar=findViewById(R.id.progressBar);
         sendImageButton=findViewById(R.id.sendPhotoButton);
@@ -126,6 +129,8 @@ public class CChatActivity extends AppCompatActivity {
                 {
                  new InputFilter.LengthFilter(500)
                 });
+
+
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,6 +245,15 @@ public class CChatActivity extends AppCompatActivity {
             case R.id.sign_out:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(CChatActivity.this, SignInActivity.class));
+                return true;
+            case R.id.acount:
+                Intent intent = new Intent(CChatActivity.this,
+                        AcountActivity.class);
+                intent.putExtra("userName", userName);
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                startActivity(new Intent(CChatActivity.this, UserListActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

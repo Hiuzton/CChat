@@ -9,6 +9,7 @@
     android:background="@drawable/background_chat"
     tools:context=".CChatActivity">
 
+
     <ListView
         android:id="@+id/messageListView"
         android:layout_width="match_parent"
@@ -17,7 +18,10 @@
         android:layout_marginBottom="10dp"
         android:divider="@android:color/transparent"
         android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/message_item" />
+        tools:listitem="@layout/message_item" >
+
+
+    </ListView>
 
     <LinearLayout
         android:id="@+id/sendMessageLayout"

@@ -41,6 +41,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        getSupportActionBar().hide();
         auth=FirebaseAuth.getInstance();
 
         database=FirebaseDatabase.getInstance();
@@ -124,7 +125,8 @@ public class SignInActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = auth.getCurrentUser();
-                                    createUser(user);
+                                    String id=task.getResult().getUser().getUid();
+                                    createUser(user, id);
                                     //updateUI(user);
                                     Intent intent = new Intent(SignInActivity.this,
                                             UserListActivity.class);
@@ -151,13 +153,13 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
-    private void createUser(FirebaseUser firebaseUser) {
+    private void createUser(FirebaseUser firebaseUser, String id) {
         User user = new User();
         user.setId(firebaseUser.getUid());
         user.setEmail(firebaseUser.getEmail());
         user.setName(nameEditText.getText().toString().trim());
 
-        userDatabasereference.push().setValue(user);
+        userDatabasereference.child(id).setValue(user);
     }
 
     public void toggleLoginMode(View view) {

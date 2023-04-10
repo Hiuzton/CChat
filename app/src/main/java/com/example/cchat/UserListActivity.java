@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -39,7 +41,7 @@ public class UserListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
 
-        setTitle("Users");
+
         Intent intent=getIntent();
         if(intent!=null) {
             userName = intent.getStringExtra("userName");
@@ -59,9 +61,9 @@ public class UserListActivity extends AppCompatActivity {
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     User user=snapshot.getValue(User.class);
                     if(!user.getId().equals(auth.getUid())){
-                        user.setAvatarMockUpResource(R.drawable.baseline_person_24);
                         userArrayList.add(user);
                         userAdapter.notifyDataSetChanged();
+
                     }
 
                 }
@@ -115,7 +117,6 @@ public class UserListActivity extends AppCompatActivity {
         intent.putExtra("recipientUserId", userArrayList.get(position).getId());
         intent.putExtra("recipientUserName", userArrayList.get(position).getName());
 
-        intent.putExtra("userName", userName);
         startActivity(intent);
     }
 
@@ -128,10 +129,17 @@ public class UserListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         switch (item.getItemId()){
             case R.id.sign_out:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(UserListActivity.this, SignInActivity.class));
+                return true;
+            case R.id.acount:
+                Intent intent = new Intent(UserListActivity.this,
+                        AcountActivity.class);
+                intent.putExtra("userName", userName);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
